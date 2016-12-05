@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import uet.k59t.model.Faculty;
+import uet.k59t.model.Teacher;
 import uet.k59t.repository.FacultyRepository;
+import uet.k59t.repository.TeacherRepository;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -25,6 +27,8 @@ public class FacultyService {
     @Autowired
     private FacultyRepository facultyRepository;
 
+    @Autowired
+    private TeacherRepository teacherRepository;
     public void createFaculty() {
         try {
             if(facultyRepository.findByFacultyName("Cong nghe thong tin") == null){
@@ -75,6 +79,7 @@ public class FacultyService {
                 }
                 //For each row, iterate through all the columns
                 Iterator<Cell> cellIterator = row.cellIterator();
+                Teacher teacher =  new Teacher();
                 while (cellIterator.hasNext())
                 {
                     Cell cell = cellIterator.next();
@@ -82,14 +87,22 @@ public class FacultyService {
                     switch (cell.getCellType())
                     {
                         case Cell.CELL_TYPE_NUMERIC:
+
                             System.out.print(cell.getNumericCellValue() + "\t");
                             break;
                         case Cell.CELL_TYPE_STRING:
-                            System.out.print(cell.getStringCellValue() + "\t");
+//                            newTeacher.setUsername();
+                            if(cell.getColumnIndex() == 1) teacher.setUsername(cell.getStringCellValue());
+                            if(cell.getColumnIndex() == 2) teacher.setPassword(cell.getStringCellValue());
+                            if(cell.getColumnIndex() == 3) teacher.setUnit(cell.getStringCellValue());
+                            if(cell.getColumnIndex() == 4) teacher.setEmail(cell.getStringCellValue());
                             break;
                     }
                 }
-                System.out.println("");
+                Teacher existedTeacher = teacherRepository.findByUsername(teacher.getUsername());
+                if(existedTeacher == null){
+                    teacherRepository.save(teacher);
+                }
             }
             file.close();
         }
