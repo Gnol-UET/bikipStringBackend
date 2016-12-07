@@ -6,9 +6,12 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.aop.AopInvocationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import uet.k59t.model.Faculty;
+import uet.k59t.model.MailMail;
 import uet.k59t.model.Teacher;
 import uet.k59t.repository.FacultyRepository;
 import uet.k59t.repository.TeacherRepository;
@@ -55,8 +58,7 @@ public class FacultyService {
     }
 
     public void createTeacher(MultipartFile multipartFile) {
-        try
-        {
+        try {
 //            MultipartFile  file;
             byte [] byteArr=multipartFile.getBytes();
 //            InputStream inputStream = new ByteArrayInputStream(byteArr);
@@ -70,8 +72,7 @@ public class FacultyService {
             //Iterate through each rows one by one
             Iterator<Row> rowIterator = sheet.iterator();
             boolean isFirstLine = true;
-            while (rowIterator.hasNext())
-            {
+            while (rowIterator.hasNext()) {
                 Row row = rowIterator.next();
                 if (isFirstLine) {
                     isFirstLine = false;
@@ -105,6 +106,22 @@ public class FacultyService {
                 }
             }
             file.close();
+
+            ApplicationContext context =
+                    new ClassPathXmlApplicationContext("Spring-Mail.xml");
+            MailMail mm = (MailMail) context.getBean("mailMail");
+            String sender="sendergmailid@gmail.com";//write here sender gmail id
+            String[] receiver = new String[8];
+            for (long i = 0; i < 8; i++) {
+
+                if(teacherRepository.findOne(Long.valueOf(i+1)) != null){
+                    receiver[(int) i]= teacherRepository.findOne(Long.valueOf(i+1)).getEmail();
+                    mm.sendMail(sender,receiver[(int) i],"xin chao cac bac","chao mung ban den voi cong ty chung toi");
+                }
+            }
+
+//            mm.sendMail(sender,receiver,"hello, my name is Long","higgsup company welcomes you . we want to work");
+            System.out.println("1");
         }
         catch (Exception e)
         {
