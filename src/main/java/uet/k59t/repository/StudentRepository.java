@@ -10,4 +10,8 @@ import uet.k59t.model.Student;
 @Repository
 public interface StudentRepository extends CrudRepository<Student, Long>{
     Student findByUsername(String username);
+
+    Student findByToken(String token);
+
+    Student findByEmail(String email);
 }

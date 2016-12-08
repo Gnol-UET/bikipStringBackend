@@ -8,11 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uet.k59t.controller.dto.StudentDTO;
 import uet.k59t.controller.dto.TeacherDTO;
+import uet.k59t.controller.dto.UserDTO;
 import uet.k59t.model.Role;
 import uet.k59t.model.Student;
 import uet.k59t.model.Teacher;
 import uet.k59t.repository.StudentRepository;
 import uet.k59t.repository.TeacherRepository;
+
+import java.util.Date;
+import java.util.UUID;
 
 @Service
 public class LoginService {
@@ -29,6 +33,7 @@ public class LoginService {
             teacher.setPassword(teacherDTO.getPassword());
             teacher.setEmail(teacherDTO.getEmail());
             teacher.setUnit(teacherDTO.getUnit());
+            teacher.setRealname(teacherDTO.getRealname());
             Teacher existedTeacher = teacherRepository.findByUsername(teacher.getUsername());
             if (existedTeacher == null) {
                 teacherRepository.save(teacher);
@@ -53,6 +58,7 @@ public class LoginService {
             student.setGrade(studentDTO.getGrade());
             student.setClassname(studentDTO.getClassname());
             student.setEmail(studentDTO.getEmail());
+            student.setRealname(studentDTO.getRealname());
             Student existedStudent = studentRepository.findByUsername(student.getUsername());
             if (existedStudent == null) {
                 studentRepository.save(student);
@@ -62,6 +68,66 @@ public class LoginService {
             }
         } else {
             throw new NullPointerException("Username đã tồn tại");
+        }
+
+    }
+
+    public UserDTO login(UserDTO userDTO) {
+        if(studentRepository.findByEmail(userDTO.getUsername() + "@vnu.edu.vn") !=  null){
+            Student a = studentRepository.findByEmail(userDTO.getUsername()+ "@vnu.edu.vn");
+            if(a.getPassword().equals(studentRepository.findByEmail(userDTO.getUsername()+ "@vnu.edu.vn").getPassword())){
+                if (a.getToken() == null) {
+                    a.setToken(UUID.randomUUID().toString());
+                    a.setTokenExpiry(new Date(System.currentTimeMillis() + (1000 * 60 * 60 * 24)));
+                } else {
+                    a.setTokenExpiry(new Date(System.currentTimeMillis() + (1000 * 60 * 60 * 24)));
+                }
+                a = studentRepository.save(a);
+                UserDTO result = new UserDTO();
+                result.setUsername(a.getUsername());
+                result.setPassword(a.getPassword());
+                result.setRole(a.getRole());
+                result.setToken(a.getToken());
+                return result;
+            }
+        }
+        else if(teacherRepository.findByUsername(userDTO.getUsername()) !=  null){
+            Teacher b = teacherRepository.findByUsername(userDTO.getUsername());
+            if(b.getPassword().equals(teacherRepository.findByUsername(userDTO.getUsername()).getPassword())){
+                if (b.getToken() == null) {
+                    b.setToken(UUID.randomUUID().toString());
+                    b.setTokenExpiry(new Date(System.currentTimeMillis() + (1000 * 60 * 60 * 24)));
+                } else {
+                    b.setTokenExpiry(new Date(System.currentTimeMillis() + (1000 * 60 * 60 * 24)));
+                }
+                b = teacherRepository.save(b);
+                UserDTO result = new UserDTO();
+                result.setUsername(b.getUsername());
+                result.setPassword(b.getPassword());
+                result.setRole(b.getRole());
+                result.setToken(b.getToken());
+                return result;
+            }
+        }
+        else {
+            throw  new NullPointerException("Sai username hoac password");
+        }
+        return null;
+
+    }
+
+    public void logout(String token) {
+        if(teacherRepository.findByToken(token) != null){
+            Teacher teacher = teacherRepository.findByToken(token);
+            teacher.setToken(null);
+            teacher.setTokenExpiry(null);
+            teacherRepository.save(teacher);
+        }
+        if(studentRepository.findByToken(token) != null){
+            Student student = studentRepository.findByToken(token);
+            student.setToken(null);
+            student.setTokenExpiry(null);
+            studentRepository.save(student);
         }
 
     }

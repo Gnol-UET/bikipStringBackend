@@ -10,4 +10,6 @@ import uet.k59t.model.Teacher;
 @Repository
 public interface TeacherRepository  extends CrudRepository<Teacher, Long>{
     Teacher findByUsername(String username);
+
+    Teacher findByToken(String token);
 }

@@ -23,4 +23,8 @@ public class FacultyController {
     public void createTeacher(@RequestParam("file") MultipartFile multipartFile){
         facultyService.createTeacher(multipartFile);
     }
+    @RequestMapping(value = "/faculty/createStudent", method = RequestMethod.POST)
+    public void createStudent(@RequestParam("file") MultipartFile multipartFile){
+        facultyService.createStudent(multipartFile);
+    }
 }

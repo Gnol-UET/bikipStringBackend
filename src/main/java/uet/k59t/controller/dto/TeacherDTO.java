@@ -5,27 +5,12 @@ import uet.k59t.model.Role;
 /**
  * Created by Longlaptop on 11/24/2016.
  */
-public class TeacherDTO {
-    private String username;
-    private String password;
+public class TeacherDTO extends UserDTO {
     private String email;
-    private Role role;
     private String unit;
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public TeacherDTO() {
+        this.setRole(Role.TEACHER);
     }
 
     public String getEmail() {
@@ -34,14 +19,6 @@ public class TeacherDTO {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
     }
 
     public String getUnit() {

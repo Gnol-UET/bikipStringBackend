@@ -1,6 +1,7 @@
 package uet.k59t.model;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * Created by Longlaptop on 11/24/2016.
@@ -17,6 +18,33 @@ public class Student    {
     private String email;
     private String grade;
     private String classname;
+    private String token;
+    private Date tokenExpiry;
+    private String realname;
+
+    public String getRealname() {
+        return realname;
+    }
+
+    public void setRealname(String realname) {
+        this.realname = realname;
+    }
+
+    public Date getTokenExpiry() {
+        return tokenExpiry;
+    }
+
+    public void setTokenExpiry(Date tokenExpiry) {
+        this.tokenExpiry = tokenExpiry;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 
     public Student() {
         this.setRole(Role.STUDENT);
