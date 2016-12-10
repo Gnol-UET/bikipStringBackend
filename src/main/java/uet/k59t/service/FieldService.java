@@ -3,6 +3,7 @@ package uet.k59t.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uet.k59t.controller.dto.FieldDTO;
+import uet.k59t.controller.dto.TeacherDTO;
 import uet.k59t.model.Field;
 import uet.k59t.model.Teacher;
 import uet.k59t.repository.FieldRepository;
@@ -47,5 +48,41 @@ public class FieldService {
             }
         }
         else throw  new NullPointerException("Invalid token");
+    }
+
+    public List<TeacherDTO> showAllInterestedTeacherOfOneField(long field_id) {
+        List<TeacherDTO> returnTeachers = new ArrayList<TeacherDTO>();
+        if(fieldRepository.findOne(field_id) != null){
+            Field field = fieldRepository.findOne(field_id);
+            for(Teacher teacher:field.getTeachers()){
+                TeacherDTO teacherDTO = new TeacherDTO();
+                teacherDTO.setUsername(teacher.getUsername());
+                teacherDTO.setEmail(teacher.getEmail());
+                teacherDTO.setRealname(teacher.getRealname());
+                teacherDTO.setUnit(teacher.getUnit());
+                returnTeachers.add(teacherDTO);
+            }
+            return returnTeachers;
+        }
+        else throw  new NullPointerException("Invalid field Id");
+    }
+
+    public List<FieldDTO> showAllInterestedFieldOfOneTeacher(long teacher_id) {
+        List<FieldDTO> returnFieldDTOs = new ArrayList<FieldDTO>();
+        List<Field> fields = (List<Field>) fieldRepository.findAll();
+        if(teacherRepository.findOne(teacher_id) != null){
+            Teacher teacher = teacherRepository.findOne(teacher_id);
+            for(Field field:fields){
+                if(field.getTeachers().contains(teacher) == true){
+                    FieldDTO fieldDTO = new FieldDTO();
+                    fieldDTO.setFieldName(field.getFieldName());
+                    fieldDTO.setId(field.getId());
+                    returnFieldDTOs.add(fieldDTO);
+
+                }
+            }
+            return returnFieldDTOs;
+        }
+        else throw new NullPointerException("Invalid teacher ID");
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import uet.k59t.controller.dto.FieldDTO;
+import uet.k59t.controller.dto.TeacherDTO;
 import uet.k59t.controller.stereotype.RequiredRoles;
 import uet.k59t.model.Role;
 import uet.k59t.service.FieldService;
@@ -28,9 +29,22 @@ public class FieldController {
 
     //Field adds interested teacher
     @RequiredRoles(Role.TEACHER)
-    @RequestMapping(value = "field/{field_id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/field/{field_id}", method = RequestMethod.POST)
     public String addFieldToTeacher(@PathVariable("field_id") long field_id, HttpServletRequest httpServletRequest) {
         String token = httpServletRequest.getHeader("auth-token");
         return fieldService.addFieldToTeacher(field_id, token);
     }
+
+    //Field get all interested teacher
+    //Different RequestMethod
+    @RequestMapping(value = "/field/showfield/{field_id}", method = RequestMethod.GET)
+    public List<TeacherDTO> showAllInterestedTeacherOfOneField(@PathVariable("field_id") long field_id) {
+        return fieldService.showAllInterestedTeacherOfOneField(field_id);
+    }
+    //Teacher get all interested field
+    @RequestMapping(value = "/field/showteacher/{teacher_id}", method = RequestMethod.GET)
+    public List<FieldDTO> showAllInterestedFieldOfOneTeacher(@PathVariable("teacher_id") long teacher_id){
+        return fieldService.showAllInterestedFieldOfOneTeacher(teacher_id);
+    }
 }
+
