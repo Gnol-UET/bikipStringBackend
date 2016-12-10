@@ -23,7 +23,15 @@ public class Field {
                 @JoinColumn(name = "user_id", referencedColumnName = "id")
         }
     )
-    private List<Teacher> users =new ArrayList<Teacher>();
+    private List<Teacher> teachers =new ArrayList<Teacher>();
+
+    public List<Teacher> getTeachers() {
+        return teachers;
+    }
+
+    public void setTeachers(List<Teacher> teachers) {
+        this.teachers = teachers;
+    }
 
     public Long getId() {
         return id;
