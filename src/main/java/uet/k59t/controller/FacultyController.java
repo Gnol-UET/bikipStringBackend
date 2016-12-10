@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import uet.k59t.controller.stereotype.RequiredRoles;
+import uet.k59t.model.Field;
 import uet.k59t.model.Moderator;
 import uet.k59t.model.Role;
+import uet.k59t.repository.FieldRepository;
 import uet.k59t.repository.ModeratorRepository;
 import uet.k59t.service.FacultyService;
 
@@ -22,6 +24,8 @@ public class FacultyController {
     private FacultyService facultyService;
     @Autowired
     private ModeratorRepository moderatorRepository;
+    @Autowired
+    private FieldRepository fieldRepository;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public void createModerator() {
@@ -29,6 +33,18 @@ public class FacultyController {
         moderator.setUsername("mod");
         moderator.setPassword("1");
         moderatorRepository.save(moderator);
+        Field[] fields = new Field[5];
+        for (int i = 0; i < 5; i++) {
+            fields[i] = new Field();
+        }
+        fields[0].setFieldName("Hardware");
+        fields[1].setFieldName("Network");
+        fields[2].setFieldName("Web");
+        fields[3].setFieldName("Security");
+        fields[4].setFieldName("Database");
+        for (int i = 0; i < 5; i++) {
+            fieldRepository.save(fields[i]);
+        }
     }
 
     @RequiredRoles(Role.MODERATOR)
