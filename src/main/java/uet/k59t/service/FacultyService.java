@@ -115,17 +115,17 @@ public class FacultyService {
             MailMail mm = (MailMail) context.getBean("mailMail");
             String sender="sendergmailid@gmail.com";//write here sender gmail id
             String[] receiver = new String[sheet.getLastRowNum()];
-//            for (long i = 0; i < sheet.getLastRowNum(); i++) {
-//
-//                if(teacherRepository.findOne(Long.valueOf(i+1)) != null){
-//                    Teacher temp = teacherRepository.findOne(Long.valueOf(i+1));
-//                    receiver[(int) i]= temp.getEmail();
-//                    mm.sendMail(sender,receiver[(int) i],"Mật khẩu","Đây là tài khoản của bạn \n" +
-//                            "Tên đăng nhập: " + temp.getEmail() +"\n" +
-//                            "Mật khẩu: " + temp.getPassword()+"\n" +
-//                            "Chào mừng bạn đến với Đại học Công Nghệ");
-//                }
-//            }
+            for (long i = 0; i < sheet.getLastRowNum(); i++) {
+
+                if(teacherRepository.findOne(Long.valueOf(i+1)) != null){
+                    Teacher temp = teacherRepository.findOne(Long.valueOf(i+1));
+                    receiver[(int) i]= temp.getEmail();
+                    mm.sendMail(sender,receiver[(int) i],"Mật khẩu","Đây là tài khoản của bạn \n" +
+                            "Tên đăng nhập: " + temp.getUsername() +"\n" +
+                            "Mật khẩu: " + temp.getPassword()+"\n" +
+                            "Chào mừng bạn đến với Đại học Công Nghệ");
+                }
+            }
 
             System.out.println("1");
 //            mm.sendMail(sender,receiver,"hello, my name is Long","higgsup company welcomes you . we want to work");
@@ -189,17 +189,17 @@ public class FacultyService {
             MailMail mm = (MailMail) context.getBean("mailMail");
             String sender="sendergmailid@gmail.com";//write here sender gmail id
             String[] receiver = new String[sheet.getLastRowNum()];
-//            for (long i = 0; i < sheet.getLastRowNum(); i++) {
-//
-//                if(studentRepository.findOne(Long.valueOf(i+1)) != null){
-//                    Student temp = studentRepository.findOne(Long.valueOf(i+1));
-//                    receiver[(int) i]= temp.getEmail();
-//                    mm.sendMail(sender,receiver[(int) i],"Mật khẩu","Đây là tài khoản của bạn \n" +
-//                            "Tên đăng nhập: " + temp.getEmail() +"\n" +
-//                            "Mật khẩu: " + temp.getPassword()+"\n" +
-//                            "Chào mừng bạn đến với Đại học Công Nghệ");
-//                }
-//            }
+            for (long i = 0; i < sheet.getLastRowNum(); i++) {
+
+                if(studentRepository.findOne(Long.valueOf(i+1)) != null){
+                    Student temp = studentRepository.findOne(Long.valueOf(i+1));
+                    receiver[(int) i]= temp.getEmail();
+                    mm.sendMail(sender,receiver[(int) i],"Mật khẩu","Đây là tài khoản của bạn \n" +
+                            "Tên đăng nhập: " + temp.getEmail() +"\n" +
+                            "Mật khẩu: " + temp.getPassword()+"\n" +
+                            "Chào mừng bạn đến với Đại học Công Nghệ");
+                }
+            }
 
 //            mm.sendMail(sender,receiver,"hello, my name is Long","higgsup company welcomes you . we want to work");
             System.out.println("1");
