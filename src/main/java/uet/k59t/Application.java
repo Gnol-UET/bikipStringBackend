@@ -37,6 +37,7 @@ public class Application {
 //        mm.sendMail(sender,receiver,"hight scholl music cal","long 1234");
 //
 //        System.out.println("success");
+
         SpringApplication.run(Application.class);
 
 

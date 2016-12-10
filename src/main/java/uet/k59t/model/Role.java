@@ -1,5 +1,5 @@
 package uet.k59t.model;
 
 public enum Role {
-    TEACHER, STUDENT
+    TEACHER, STUDENT, MODERATOR
 }

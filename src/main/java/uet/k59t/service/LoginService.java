@@ -9,9 +9,11 @@ import org.springframework.stereotype.Service;
 import uet.k59t.controller.dto.StudentDTO;
 import uet.k59t.controller.dto.TeacherDTO;
 import uet.k59t.controller.dto.UserDTO;
+import uet.k59t.model.Moderator;
 import uet.k59t.model.Role;
 import uet.k59t.model.Student;
 import uet.k59t.model.Teacher;
+import uet.k59t.repository.ModeratorRepository;
 import uet.k59t.repository.StudentRepository;
 import uet.k59t.repository.TeacherRepository;
 
@@ -24,6 +26,8 @@ public class LoginService {
     private TeacherRepository teacherRepository;
     @Autowired
     private StudentRepository studentRepository;
+    @Autowired
+    private ModeratorRepository moderatorRepository;
 
     public TeacherDTO createTeacher(TeacherDTO teacherDTO) {
         if (teacherDTO.getRole() == Role.TEACHER) {
@@ -109,6 +113,23 @@ public class LoginService {
                 return result;
             }
         }
+        else if(moderatorRepository.findByUsername(userDTO.getUsername()) != null){
+            if(moderatorRepository.findByUsername(userDTO.getUsername()).getPassword().equals(userDTO.getPassword())){
+                Moderator moderator = moderatorRepository.findByUsername(userDTO.getUsername());
+                if (moderator.getToken() == null) {
+                    moderator.setToken(UUID.randomUUID().toString());
+                    moderator.setTokenExpiry(new Date(System.currentTimeMillis() + (1000 * 60 * 60 * 24)));
+                } else {
+                    moderator.setTokenExpiry(new Date(System.currentTimeMillis() + (1000 * 60 * 60 * 24)));
+                }
+                UserDTO result = new UserDTO();
+                result.setUsername(moderator.getUsername());
+                result.setRole(moderator.getRole());
+                result.setToken(moderator.getToken());
+                moderatorRepository.save(moderator);
+                return  result;
+            }
+        }
         else {
             throw  new NullPointerException("Sai username hoac password");
         }
@@ -123,12 +144,20 @@ public class LoginService {
             teacher.setTokenExpiry(null);
             teacherRepository.save(teacher);
         }
-        if(studentRepository.findByToken(token) != null){
+        else if(studentRepository.findByToken(token) != null){
             Student student = studentRepository.findByToken(token);
             student.setToken(null);
             student.setTokenExpiry(null);
             studentRepository.save(student);
         }
+        else if(moderatorRepository.findByToken(token) != null){
+            Moderator moderator = moderatorRepository.findByToken(token);
+            moderator.setTokenExpiry(null);
+            moderator.setToken(null);
+            moderatorRepository.save(moderator);
+
+        }
+
 
     }
 }
