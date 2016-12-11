@@ -21,6 +21,15 @@ public class Student    {
     private String token;
     private Date tokenExpiry;
     private String realname;
+    private boolean allowance = false;
+
+    public boolean isAllowance() {
+        return allowance;
+    }
+
+    public void setAllowance(boolean allowance) {
+        this.allowance = allowance;
+    }
 
     public String getRealname() {
         return realname;

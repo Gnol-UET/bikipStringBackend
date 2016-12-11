@@ -109,6 +109,7 @@ public class FacultyService {
                                 if(cell.getColumnIndex() == 0) teacher.setUsername(cell.getStringCellValue());
                                 if(cell.getColumnIndex() == 1) teacher.setUnit(cell.getStringCellValue());
                                 if(cell.getColumnIndex() == 2) teacher.setEmail(cell.getStringCellValue());
+                                if(cell.getColumnIndex() == 3) teacher.setRealname(cell.getStringCellValue());
                                 break;
                         }
                     }
@@ -182,9 +183,13 @@ public class FacultyService {
                                 break;
                             case Cell.CELL_TYPE_STRING:
                                 if(cell.getColumnIndex() == 0) student.setUsername(cell.getStringCellValue());
-                                if(cell.getColumnIndex() == 1) student.setGrade(cell.getStringCellValue());
-                                if(cell.getColumnIndex() == 2) student.setClassname(cell.getStringCellValue());
-                                if(cell.getColumnIndex() == 3) student.setEmail(cell.getStringCellValue());
+                                else if(cell.getColumnIndex() == 1) student.setGrade(cell.getStringCellValue());
+                                else if(cell.getColumnIndex() == 2) student.setClassname(cell.getStringCellValue());
+                                else if(cell.getColumnIndex() == 3) student.setEmail(cell.getStringCellValue());
+                                else if(cell.getColumnIndex() == 4) {
+                                    if(cell.getStringCellValue().equalsIgnoreCase("true"))
+                                    student.setAllowance(true);
+                                }
                                 break;
                         }
                     }
