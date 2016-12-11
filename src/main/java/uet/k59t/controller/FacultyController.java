@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import uet.k59t.controller.dto.FacultyDTO;
 import uet.k59t.controller.stereotype.RequiredRoles;
 import uet.k59t.model.Field;
 import uet.k59t.model.Moderator;
@@ -14,6 +15,8 @@ import uet.k59t.model.Role;
 import uet.k59t.repository.FieldRepository;
 import uet.k59t.repository.ModeratorRepository;
 import uet.k59t.service.FacultyService;
+
+import java.util.List;
 
 /**
  * Created by Longlaptop on 11/24/2016.
@@ -51,19 +54,24 @@ public class FacultyController {
     @RequestMapping(value = "/faculty", method = RequestMethod.GET)
     public void createFaculty(HttpServletRequest httpServletRequest) {
         String token = httpServletRequest.getHeader("auth-token");
-
         facultyService.createFaculty(token);
     }
+    @RequestMapping(value = "/faculty/showall", method = RequestMethod.GET)
+    public List<FacultyDTO> showAllFaculty() {
+        return facultyService.showAllFaculty();
+    }
+
+
 
     @RequiredRoles(Role.MODERATOR)
-    @RequestMapping(value = "/faculty/createTeacher", method = RequestMethod.POST)
+    @RequestMapping(value = "/faculty/createteacher", method = RequestMethod.POST)
     public void createTeacher(@RequestParam("file") MultipartFile multipartFile, HttpServletRequest httpServletRequest) {
         String token = httpServletRequest.getHeader("auth-token");
         facultyService.createTeacher(multipartFile, token);
     }
 
     @RequiredRoles(Role.MODERATOR)
-    @RequestMapping(value = "/faculty/createStudent", method = RequestMethod.POST)
+    @RequestMapping(value = "/faculty/createstudent", method = RequestMethod.POST)
     public void createStudent(@RequestParam("file") MultipartFile multipartFile, HttpServletRequest httpServletRequest) {
         String token = httpServletRequest.getHeader("auth-token");
         facultyService.createStudent(multipartFile, token);

@@ -10,6 +10,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import uet.k59t.controller.dto.FacultyDTO;
 import uet.k59t.model.Faculty;
 import uet.k59t.model.MailMail;
 import uet.k59t.model.Student;
@@ -23,7 +24,9 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -54,6 +57,7 @@ public class FacultyService {
                     facultyRepository.save(vlkt);
                     facultyRepository.save(chktvtdh);
                     facultyRepository.save(dtvt);
+
                 }
             }catch (AopInvocationException e ){
                 Faculty cntt = new Faculty("Cong nghe thong tin", "Xuan Thuy");
@@ -64,11 +68,27 @@ public class FacultyService {
                 facultyRepository.save(vlkt);
                 facultyRepository.save(chktvtdh);
                 facultyRepository.save(dtvt);
+
             }
         }
         else throw new NullPointerException("Token invalid");
 
 
+    }
+    public List<FacultyDTO> showAllFaculty(){
+        try{
+            List<Faculty> facultyList = (List<Faculty>) facultyRepository.findAll();
+            List<FacultyDTO> returnFacultyDTOs = new ArrayList<FacultyDTO>();
+            for(Faculty faculty : facultyList){
+                FacultyDTO facultyDTO = new FacultyDTO();
+                facultyDTO.setFacultyAddr(faculty.getFacultyAddr());
+                facultyDTO.setFacultyName(faculty.getFacultyName());
+                returnFacultyDTOs.add(facultyDTO);
+            }
+            return returnFacultyDTOs;
+        } catch (Exception e){
+            throw new NullPointerException("Empty list");
+        }
     }
 
     public void createTeacher(MultipartFile multipartFile , String token) {
