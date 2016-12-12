@@ -27,7 +27,7 @@ public class FieldController {
         return fieldService.showAllFields();
     }
 
-    //Field adds interested teacher
+    //Teacher add an interested field
     @RequiredRoles(Role.TEACHER)
     @RequestMapping(value = "/field/{field_id}", method = RequestMethod.POST)
     public String addFieldToTeacher(@PathVariable("field_id") long field_id, HttpServletRequest httpServletRequest) {

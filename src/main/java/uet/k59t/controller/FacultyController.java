@@ -19,7 +19,7 @@ import uet.k59t.service.FacultyService;
 import java.util.List;
 
 /**
- * Created by Longlaptop on 11/24/2016.
+ * Created  by Longlaptop on 11/24/2016.
  */
 @RestController
 public class FacultyController {
@@ -33,20 +33,25 @@ public class FacultyController {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public void createModerator() {
         Moderator moderator = new Moderator();
-        moderator.setUsername("mod");
-        moderator.setPassword("1");
-        moderatorRepository.save(moderator);
-        Field[] fields = new Field[5];
-        for (int i = 0; i < 5; i++) {
-            fields[i] = new Field();
+        if(moderatorRepository.findByUsername("mod") ==null){
+            moderator.setUsername("mod");
+            moderator.setPassword("1");
+            moderatorRepository.save(moderator);
+
         }
-        fields[0].setFieldName("Hardware");
-        fields[1].setFieldName("Network");
-        fields[2].setFieldName("Web");
-        fields[3].setFieldName("Security");
-        fields[4].setFieldName("Database");
-        for (int i = 0; i < 5; i++) {
-            fieldRepository.save(fields[i]);
+        if(fieldRepository.findOne((long)1) == null){
+            Field[] fields = new Field[5];
+            for (int i = 0; i < 5; i++) {
+                fields[i] = new Field();
+            }
+            fields[0].setFieldName("Hardware");
+            fields[1].setFieldName("Network");
+            fields[2].setFieldName("Web");
+            fields[3].setFieldName("Security");
+            fields[4].setFieldName("Database");
+            for (int i = 0; i < 5; i++) {
+                fieldRepository.save(fields[i]);
+            }
         }
     }
 
