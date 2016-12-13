@@ -79,7 +79,7 @@ public class LoginService {
     public UserDTO login(UserDTO userDTO) {
         if(studentRepository.findByEmail(userDTO.getUsername() + "@vnu.edu.vn") !=  null){
             Student a = studentRepository.findByEmail(userDTO.getUsername()+ "@vnu.edu.vn");
-            if(a.getPassword().equals(studentRepository.findByEmail(userDTO.getUsername()+ "@vnu.edu.vn").getPassword())){
+            if(a.getPassword().equals(userDTO.getPassword())){
                 if (a.getToken() == null) {
                     a.setToken(UUID.randomUUID().toString());
                     a.setTokenExpiry(new Date(System.currentTimeMillis() + (1000 * 60 * 60 * 24)));
@@ -94,10 +94,11 @@ public class LoginService {
                 result.setToken(a.getToken());
                 return result;
             }
+            else throw new NullPointerException("Invalid username or password");
         }
         else if(teacherRepository.findByUsername(userDTO.getUsername()) !=  null){
             Teacher b = teacherRepository.findByUsername(userDTO.getUsername());
-            if(b.getPassword().equals(teacherRepository.findByUsername(userDTO.getUsername()).getPassword())){
+            if(b.getPassword().equals(userDTO.getPassword())){
                 if (b.getToken() == null) {
                     b.setToken(UUID.randomUUID().toString());
                     b.setTokenExpiry(new Date(System.currentTimeMillis() + (1000 * 60 * 60 * 24)));
@@ -112,6 +113,7 @@ public class LoginService {
                 result.setToken(b.getToken());
                 return result;
             }
+            else throw new NullPointerException("Invalid username or password");
         }
         else if(moderatorRepository.findByUsername(userDTO.getUsername()) != null){
             if(moderatorRepository.findByUsername(userDTO.getUsername()).getPassword().equals(userDTO.getPassword())){
@@ -129,11 +131,12 @@ public class LoginService {
                 moderatorRepository.save(moderator);
                 return  result;
             }
+            else throw new NullPointerException("Invalid username or password");
         }
         else {
             throw  new NullPointerException("Sai username hoac password");
         }
-        return null;
+
 
     }
 

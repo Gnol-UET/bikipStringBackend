@@ -20,6 +20,7 @@ public class Moderator {
     private String password;
     private String token;
     private Date tokenExpiry;
+    public static boolean isOpenForRegister = true;
 
     public String getToken() {
         return token;
