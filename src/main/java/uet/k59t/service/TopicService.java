@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Service;
+import uet.k59t.controller.dto.AcceptTopicDTO;
 import uet.k59t.controller.dto.TeacherDTO;
 import uet.k59t.controller.dto.TopicDTO;
 import uet.k59t.model.*;
@@ -83,6 +84,12 @@ public class TopicService {
     public TopicDTO studentRegister(TopicDTO topicDTO,String token) {
         if(Moderator.isOpenForRegister == true){
             if(studentRepository.findByToken(token) != null) {
+                List<Topic> existedTopics = (List<Topic>) topicRepository.findAll();
+                for(Topic topic : existedTopics){
+                    if(topic.getTopicname().equalsIgnoreCase(topicDTO.getTopicname())){
+                        throw new NullPointerException("Topic name existed, try another name");
+                    }
+                }
                 Student student = studentRepository.findByToken(token);
                 Teacher teacher = teacherRepository.findOne(topicDTO.getTeacherid());
                 if(student.isAllowance() == true){
@@ -92,6 +99,7 @@ public class TopicService {
                     topic.setTeacher(teacher);
                     topic.setAccepted(false);
                     topic.setTopicname(topicDTO.getTopicname());
+                    topicDTO.setStudentname(student.getUsername());
                     topicDTO.setTeachername(teacher.getRealname());
                     topicRepository.save(topic);
 
@@ -103,5 +111,57 @@ public class TopicService {
             else throw new NullPointerException("Invalid token");
         }
         else throw new NullPointerException("The registration is CLOSED, please come back ");
+    }
+
+    public List<TopicDTO> showRegisteredTopic(String token) {
+        if(teacherRepository.findByToken(token) != null){
+            Teacher teacher = teacherRepository.findByToken(token);
+            List<TopicDTO> returnList = new ArrayList<TopicDTO>();
+            for (Topic topic: topicRepository.findAll()){
+                if(topic.getTeacher() == teacher){
+                    TopicDTO topicDTO = new TopicDTO();
+                    topicDTO.setTeachername(teacher.getRealname());
+                    topicDTO.setId(topic.getId());
+                    topicDTO.setTeacherid(teacher.getId());
+                    topicDTO.setTopicname(topic.getTopicname());
+                    topicDTO.setStudentname(topic.getStudent().getUsername());
+                    topicDTO.setAccepted(topic.isAccepted());
+                    returnList.add(topicDTO);
+                }
+            }
+            return returnList;
+        }
+        else throw new NullPointerException("Invalid token");
+    }
+
+    public TopicDTO acceptTopic(Long topicId, AcceptTopicDTO acceptTopicDTO, String token) {
+        if(teacherRepository.findByToken(token) != null){
+            Teacher teacher = teacherRepository.findByToken(token);
+            List<Topic> allTopic = (List<Topic>) topicRepository.findAll();
+            List<Topic> topicOfThisTeacher = new ArrayList<Topic>();
+            for (Topic i: allTopic){
+                if(i.getTeacher() == teacher){
+                    topicOfThisTeacher.add(i);
+                }
+            }
+            for(Topic i: topicOfThisTeacher){
+                if(i.getId().equals(topicId)){
+                    if(acceptTopicDTO.isaccept() == true) {
+                        i.setAccepted(true);
+                        topicRepository.save(i);
+                        TopicDTO returnDto = new TopicDTO();
+                        returnDto.setAccepted(i.isAccepted());
+                        returnDto.setId(i.getId());
+                        returnDto.setTeacherid(teacher.getId());
+                        returnDto.setStudentname(i.getStudent().getUsername());
+                        returnDto.setTeachername(i.getTeacher().getRealname());
+                        returnDto.setTopicname(i.getTopicname());
+                        return returnDto;
+                    }
+                }
+            }
+        }
+        else throw new NullPointerException("Invalid token");
+        return null;
     }
 }

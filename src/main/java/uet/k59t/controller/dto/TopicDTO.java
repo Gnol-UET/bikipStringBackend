@@ -8,7 +8,16 @@ public class TopicDTO {
     private Long id;
     private Long teacherid;
     private String teachername;
+    private String studentname;
     private boolean isAccepted;
+
+    public String getStudentname() {
+        return studentname;
+    }
+
+    public void setStudentname(String studentname) {
+        this.studentname = studentname;
+    }
 
     public String getTeachername() {
         return teachername;

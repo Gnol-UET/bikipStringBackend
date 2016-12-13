@@ -2,10 +2,8 @@ package uet.k59t.controller;
 
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import uet.k59t.controller.dto.AcceptTopicDTO;
 import uet.k59t.controller.dto.TeacherDTO;
 import uet.k59t.controller.dto.TopicDTO;
 import uet.k59t.controller.stereotype.RequiredRoles;
@@ -23,7 +21,7 @@ public class TopicController {
     private TopicService topicService;
 
     @RequiredRoles({Role.MODERATOR,Role.STUDENT,Role.TEACHER})
-    @RequestMapping(value = "/topic/showallteachers" , method = RequestMethod.GET)
+    @RequestMapping(value = "/showallteachers" , method = RequestMethod.GET)
     public List<TeacherDTO> showAllTeachers(HttpServletRequest httpServletRequest){
         String token = httpServletRequest.getHeader("auth-token");
         return topicService.showAllTeachers(token);
@@ -47,6 +45,20 @@ public class TopicController {
         String token = httpServletRequest.getHeader("auth-token");
         return topicService.studentRegister(topicDTO, token);
         //requestBody
+    }
+
+    @RequiredRoles(Role.TEACHER)
+    @RequestMapping(value = "/topic/teacher/registeredtopic", method = RequestMethod.GET)
+    public List<TopicDTO> showRegisteredTopic(HttpServletRequest httpServletRequest){
+        String token = httpServletRequest.getHeader("auth-token");
+        return topicService.showRegisteredTopic(token);
+    }
+
+    @RequiredRoles(Role.TEACHER)
+    @RequestMapping(value = "/topic/teacher/registeredtopic/{topic_id}", method = RequestMethod.POST)
+    public TopicDTO acceptTopic(@PathVariable(value = "topic_id") Long topicId, @RequestBody AcceptTopicDTO acceptTopicDTO, HttpServletRequest httpServletRequest){
+        String token = httpServletRequest.getHeader("auth-token");
+        return topicService.acceptTopic(topicId,acceptTopicDTO,token);
     }
 
 }
