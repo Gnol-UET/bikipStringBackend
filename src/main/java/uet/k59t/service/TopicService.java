@@ -299,7 +299,7 @@ public class TopicService {
                 if(topic.isReceived() == false){
                     String receiver = topic.getStudent().getEmail();
                     String topicname = topic.getTopicname();
-                    mm.sendMail(sender,receiver,"Nộp hồ sơ","Khoa xin thông báo sinh viên "+topic.getStudent().getUsername()+" nộp hồ sơ đề tài"+topicname+" ngay lập tức\n" +
+                    mm.sendMail(sender,receiver,"Nộp hồ sơ","Khoa xin thông báo sinh viên "+topic.getStudent().getUsername()+" nộp hồ sơ đề tài "+topicname+" ngay lập tức\n" +
                             "Địa chỉ: Tầng 3, nhà E3 - Đai học Công Nghệ" );
 
                 }
