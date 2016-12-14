@@ -13,8 +13,6 @@ public class Council {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String councilname;
-    private String comment;
-    private Long score;
     @OneToMany
     @JoinTable(name = "council_has_teacher",
             joinColumns = {
@@ -26,16 +24,8 @@ public class Council {
     )
     private List<Teacher> teachers =new ArrayList<Teacher>();
 
-    @OneToMany
-    private List<Topic> topics ;
 
-    public List<Topic> getTopics() {
-        return topics;
-    }
 
-    public void setTopics(List<Topic> topics) {
-        this.topics = topics;
-    }
 
     public List<Teacher> getTeachers() {
         return teachers;
@@ -45,21 +35,7 @@ public class Council {
         this.teachers = teachers;
     }
 
-    public String getComment() {
-        return comment;
-    }
 
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    public Long getScore() {
-        return score;
-    }
-
-    public void setScore(Long score) {
-        this.score = score;
-    }
 
 
 

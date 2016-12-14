@@ -17,6 +17,8 @@ public class Topic {
     private String topicname;
     private boolean isAccepted;
     private boolean isReceived;
+    private String comment;
+    private Long score;
 
 
     @OneToOne
@@ -26,6 +28,34 @@ public class Topic {
     @ManyToOne
     @JoinColumn(name = "teacher_id", referencedColumnName = "id")
     private Teacher teacher;
+
+    @ManyToOne
+    @JoinColumn(name = "council_id", referencedColumnName = "id")
+    private Council council;
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public Long getScore() {
+        return score;
+    }
+
+    public void setScore(Long score) {
+        this.score = score;
+    }
+
+    public Council getCouncil() {
+        return council;
+    }
+
+    public void setCouncil(Council council) {
+        this.council = council;
+    }
 
     public Long getId() {
         return id;

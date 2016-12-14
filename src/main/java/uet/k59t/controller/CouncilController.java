@@ -39,7 +39,7 @@ public class CouncilController {
     public CouncilDTO addTeacher(@PathVariable(value = "teacher_id") Long teacherId,
                                  @PathVariable(value = "council_id") Long councilId,
                                  HttpServletRequest httpServletRequest){
-        String token = httpServletRequest.getHeader("auth-token");
+            String token = httpServletRequest.getHeader("auth-token");
         return councilService.addTeacherToCouncil(token,councilId,teacherId);
 
 

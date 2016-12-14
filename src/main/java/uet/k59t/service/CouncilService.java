@@ -91,15 +91,20 @@ public class CouncilService {
         if(moderatorRepository.findByToken(token) != null){
             Council council = councilRepository.findByCouncilname(councilDTO.getCouncilname());
             Topic topic = topicRepository.findById(councilDTO.getTopicid());
-//            council.setTopics(topic);
-            council.setComment(councilDTO.getComment());
-            council.setScore(councilDTO.getScore());
-            councilRepository.save(council);
-            CouncilDTO returnDto = showCouncil(token,council.getId());
-            returnDto.setComment(councilDTO.getComment());
-            returnDto.setScore(councilDTO.getScore());
-            returnDto.setTopicid(topic.getId());
-            return returnDto;
+            if(topic.isReceived() == true){
+                topic.setCouncil(council);
+                topic.setComment(councilDTO.getComment());
+                topic.setScore(councilDTO.getScore());
+                topicRepository.save(topic);
+                councilRepository.save(council);
+                CouncilDTO returnDto = showCouncil(token,council.getId());
+                returnDto.setComment(councilDTO.getComment());
+                returnDto.setScore(councilDTO.getScore());
+                returnDto.setTopicid(topic.getId());
+                return returnDto;
+
+            }
+            else throw new NullPointerException("Topic is not received ");
         }
         else throw new NullPointerException("Invalid token");
     }
