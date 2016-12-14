@@ -1,5 +1,7 @@
 package uet.k59t.service;
 
+import org.apache.poi.ss.formula.functions.T;
+import org.apache.poi.ss.usermodel.PageOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -64,10 +66,10 @@ public class TopicService {
                     if(student.isAllowance() == true){
                         String receiver = student.getEmail();
                         mm.sendMail(sender,receiver,"Mở đăng ký đề tài","Khoa xin thông báo bạn được phép đăng ký đề tài \n" +
-                                "Xin mời vào đường dẫn sau: http://localhost:8080/topic/studentregister" );
+                                "Xin mời vào đường dẫn sau: http://localhost:8080/topic/student/studentregister" );
                     }
                 }
-                return "open";
+                return "Opened registration ";
             }
             else throw new NullPointerException("The registration is CLOSED, please come back");
         }
@@ -222,6 +224,87 @@ public class TopicService {
                 return "Student "+topic.getStudent().getUsername()+" has deleted " +topic.getTopicname()+" which tutored by " +topic.getTeacher().getRealname();
             }
             else throw new NullPointerException("This topic is not yours topic");
+        }
+        else throw new NullPointerException("Invalid token");
+    }
+
+    public String openDefense(String token) {
+        if(moderatorRepository.findByToken(token) != null){
+            Moderator.isOpenForDefense = true;
+            if(Moderator.isOpenForDefense == true){
+//                List<Student> studentList = (List<Student>) studentRepository.findAll();
+                ApplicationContext context =
+                        new ClassPathXmlApplicationContext("Spring-Mail.xml");
+                MailMail mm = (MailMail) context.getBean("mailMail");
+                String sender="sendergmailid@gmail.com";//write here sender gmail id
+//
+                List<Topic> topicList = (List<Topic>) topicRepository.findAll();
+                for(Topic topic:topicList){
+                    if(topic.isAccepted() == true){
+                        String receiver = topic.getStudent().getEmail();
+                        String topicname = topic.getTopicname();
+                        mm.sendMail(sender,receiver,"Mở đăng ký bảo vệ khóa luận","Khoa xin thông báo đã cổng mở bảo vệ đề tài \n" +
+                                "Để đăng ký bảo vệ đề tài "+topicname+ ", xin mời vào đường dẫn sau: http://localhost:8080/topic/student/defense" );
+
+                    }
+                    if(topic.isAccepted() == false){
+                        String receiver = topic.getStudent().getUsername();
+                        String topicname = topic.getTopicname();
+                        mm.sendMail(sender,receiver,"Đề tài không được cấp phép", "Khoa xin thông báo đề tài " +
+                                topicname+" của bạn không được giảng viên cấp phép bảo vệ");
+                    }
+                }
+
+                return "Defense portal opened ";
+            }
+            else throw new NullPointerException("The Defense portal is CLOSED, please come back");
+        }
+        else throw new NullPointerException("Invalid token");
+    }
+
+    public String closeDefense(String token) {
+        if(moderatorRepository.findByToken(token) != null){
+            Moderator.isOpenForDefense = false;
+            return "The registration is CLOSED, please come back";
+        }
+        else throw new NullPointerException("Invalid token");
+    }
+
+    public String receiveATopic(String token, Long topicId) {
+        if(moderatorRepository.findByToken(token) != null){
+            List<Topic> topicList = (List<Topic>) topicRepository.findAll();
+            for (Topic topic : topicList){
+                if(topic.getId().equals(topicId)){
+                    if(topic.isAccepted() == true){
+                        topic.setReceived(true);
+                        topicRepository.save(topic);
+                        return "Topic " + topic.getTopicname() +" is received";
+                    }
+                    else throw new NullPointerException("Topic is not accepted by teacher ");
+                }
+            }
+            return "Topic not found";
+        }
+        else throw new NullPointerException("Invalid token");
+    }
+
+    public String notifyUnReceived(String token) {
+        if(moderatorRepository.findByToken(token) != null){
+            List<Topic> topicList = (List<Topic>) topicRepository.findAll();
+            ApplicationContext context =
+                    new ClassPathXmlApplicationContext("Spring-Mail.xml");
+            MailMail mm = (MailMail) context.getBean("mailMail");
+            String sender="sendergmailid@gmail.com";//write here sender gmail id
+            for (Topic topic : topicList){
+                if(topic.isReceived() == false){
+                    String receiver = topic.getStudent().getEmail();
+                    String topicname = topic.getTopicname();
+                    mm.sendMail(sender,receiver,"Nộp hồ sơ","Khoa xin thông báo sinh viên "+topic.getStudent().getUsername()+" nộp hồ sơ đề tài"+topicname+" ngay lập tức\n" +
+                            "Địa chỉ: Tầng 3, nhà E3 - Đai học Công Nghệ" );
+
+                }
+            }
+            return "Notification mail sent";
         }
         else throw new NullPointerException("Invalid token");
     }

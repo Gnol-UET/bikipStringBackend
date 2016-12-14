@@ -16,6 +16,7 @@ public class Topic {
     private Long id;
     private String topicname;
     private boolean isAccepted;
+    private boolean isReceived;
 
 
     @OneToOne
@@ -28,6 +29,14 @@ public class Topic {
 
     public Long getId() {
         return id;
+    }
+
+    public boolean isReceived() {
+        return isReceived;
+    }
+
+    public void setReceived(boolean received) {
+        isReceived = received;
     }
 
     public void setId(Long id) {

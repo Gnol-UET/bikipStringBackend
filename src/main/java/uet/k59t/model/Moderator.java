@@ -21,6 +21,8 @@ public class Moderator {
     private String token;
     private Date tokenExpiry;
     public static boolean isOpenForRegister = true;
+    public static boolean isOpenForDefense= true;
+
 
     public String getToken() {
         return token;

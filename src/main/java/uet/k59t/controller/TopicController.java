@@ -20,6 +20,7 @@ public class TopicController {
     @Autowired
     private TopicService topicService;
 
+    //MODERATOR
     @RequiredRoles({Role.MODERATOR,Role.STUDENT,Role.TEACHER})
     @RequestMapping(value = "/showallteachers" , method = RequestMethod.GET)
     public List<TeacherDTO> showAllTeachers(HttpServletRequest httpServletRequest){
@@ -28,18 +29,44 @@ public class TopicController {
     }
 
     @RequiredRoles(Role.MODERATOR)
-    @RequestMapping(value = "/topic/open", method = RequestMethod.GET)
+    @RequestMapping(value = "/topic/openregister", method = RequestMethod.GET)
     public String openRegister(HttpServletRequest httpServletRequest){
         String token = httpServletRequest.getHeader("auth-token");
         return topicService.openRegister(token);
     }
     @RequiredRoles(Role.MODERATOR)
-    @RequestMapping(value = "/topic/close", method = RequestMethod.GET)
+    @RequestMapping(value = "/topic/closeregister", method = RequestMethod.GET)
     public String closeRegister(HttpServletRequest httpServletRequest){
         String token = httpServletRequest.getHeader("auth-token");
         return topicService.closeRegister(token);
     }
-
+    //Defend topics whichs are accepted
+    @RequiredRoles(Role.MODERATOR)
+    @RequestMapping(value = "/topic/opendefense", method = RequestMethod.GET)
+    public String openDefense(HttpServletRequest httpServletRequest){
+        String token = httpServletRequest.getHeader("auth-token");
+        return topicService.openDefense(token);
+    }
+    @RequiredRoles(Role.MODERATOR)
+    @RequestMapping(value = "/topic/closedefense", method = RequestMethod.GET)
+    public String closeDefense(HttpServletRequest httpServletRequest){
+        String token = httpServletRequest.getHeader("auth-token");
+        return topicService.closeDefense(token);
+    }
+    //Receive a topic
+    @RequiredRoles(Role.MODERATOR)
+    @RequestMapping(value = "/topic/receive/{topic_id}", method = RequestMethod.GET)
+    public String receiveATopic(HttpServletRequest httpServletRequest, @PathVariable(value = "topic_id") Long topicId){
+        String token = httpServletRequest.getHeader("auth-token");
+        return topicService.receiveATopic(token, topicId);
+    }
+    //Notify unreceived topic to student
+    @RequiredRoles(Role.MODERATOR)
+    @RequestMapping(value = "/topic/receive/notify", method = RequestMethod.GET)
+    public String notifyUnReceived(HttpServletRequest httpServletRequest){
+        String token = httpServletRequest.getHeader("auth-token");
+        return topicService.notifyUnReceived(token);
+    }
 
     //STUDENT
     //student register a topic with topic name, teacherId
