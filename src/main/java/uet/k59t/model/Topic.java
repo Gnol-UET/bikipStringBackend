@@ -1,6 +1,10 @@
 package uet.k59t.model;
 
+import org.hibernate.annotations.*;
+
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
 
 /**
  * Created by Longlaptop on 12/13/2016.
@@ -13,11 +17,12 @@ public class Topic {
     private String topicname;
     private boolean isAccepted;
 
+
     @OneToOne
     @JoinColumn(name = "student_id", referencedColumnName = "id")
     private Student student;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "teacher_id", referencedColumnName = "id")
     private Teacher teacher;
 

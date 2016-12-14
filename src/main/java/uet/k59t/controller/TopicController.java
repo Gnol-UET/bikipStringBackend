@@ -39,26 +39,54 @@ public class TopicController {
         String token = httpServletRequest.getHeader("auth-token");
         return topicService.closeRegister(token);
     }
+
+
+    //STUDENT
+    //student register a topic with topic name, teacherId
     @RequiredRoles(Role.STUDENT)
-    @RequestMapping(value = "/topic/studentregister", method = RequestMethod.POST)
+    @RequestMapping(value = "/topic/student/studentregister", method = RequestMethod.POST)
     public TopicDTO studentRegister(@RequestBody TopicDTO topicDTO, HttpServletRequest httpServletRequest){
         String token = httpServletRequest.getHeader("auth-token");
         return topicService.studentRegister(topicDTO, token);
-        //requestBody
+    }
+    //Student see a registered topic by topicID
+    @RequiredRoles(Role.STUDENT)
+    @RequestMapping(value = "/topic/student/registeredtopic/{topic_id}", method = RequestMethod.GET)
+    public TopicDTO showATopic(@PathVariable(value = "topic_id") Long topicId, HttpServletRequest httpServletRequest){
+        String token = httpServletRequest.getHeader("auth-token");
+        return topicService.showATopic(topicId,token);
+    }
+    //Student edit a registerd topic by topicID
+    @RequiredRoles(Role.STUDENT)
+    @RequestMapping(value = "/topic/student/registeredtopic/{topic_id}", method = RequestMethod.PUT)
+    public TopicDTO editATopic(@PathVariable(value = "topic_id") Long topicId, @RequestBody TopicDTO topicDTO, HttpServletRequest httpServletRequest){
+        String token = httpServletRequest.getHeader("auth-token");
+        return topicService.editATopic(topicId, topicDTO, token);
+    }
+    //Student delete a registered topic by topicID
+    @RequiredRoles(Role.STUDENT)
+    @RequestMapping(value = "/topic/student/registeredtopic/{topic_id}", method = RequestMethod.DELETE)
+    public String deleteATopic(@PathVariable(value = "topic_id") Long topicId, HttpServletRequest httpServletRequest){
+        String token = httpServletRequest.getHeader("auth-token");
+        return topicService.deleteATopic(topicId,token);
     }
 
+    //TEACHER
+    //teacher show all topics which are registered(delegate) to them
     @RequiredRoles(Role.TEACHER)
     @RequestMapping(value = "/topic/teacher/registeredtopic", method = RequestMethod.GET)
     public List<TopicDTO> showRegisteredTopic(HttpServletRequest httpServletRequest){
         String token = httpServletRequest.getHeader("auth-token");
         return topicService.showRegisteredTopic(token);
     }
-
+    //teacher accept a topic by topic id
     @RequiredRoles(Role.TEACHER)
     @RequestMapping(value = "/topic/teacher/registeredtopic/{topic_id}", method = RequestMethod.POST)
     public TopicDTO acceptTopic(@PathVariable(value = "topic_id") Long topicId, @RequestBody AcceptTopicDTO acceptTopicDTO, HttpServletRequest httpServletRequest){
         String token = httpServletRequest.getHeader("auth-token");
         return topicService.acceptTopic(topicId,acceptTopicDTO,token);
     }
+
+
 
 }

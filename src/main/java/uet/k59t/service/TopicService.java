@@ -164,4 +164,65 @@ public class TopicService {
         else throw new NullPointerException("Invalid token");
         return null;
     }
+
+    public TopicDTO showATopic(Long topicId, String token) {
+        if(studentRepository.findByToken(token) != null){
+            Topic topic = topicRepository.findById(topicId);
+            if(topic.getStudent() == studentRepository.findByToken(token)){
+                TopicDTO returnDto = new TopicDTO();
+                returnDto.setAccepted(topic.isAccepted());
+                returnDto.setTeacherid(topic.getTeacher().getId());
+                returnDto.setTopicname(topic.getTopicname());
+                returnDto.setTeachername(topic.getTeacher().getRealname());
+                returnDto.setId(topic.getId());
+                returnDto.setStudentname(topic.getStudent().getUsername());
+                return returnDto;
+            }
+            else throw new NullPointerException("This topic is not yours topic");
+        }
+        else throw new NullPointerException("Invalid token");
+    }
+
+    public TopicDTO editATopic(Long topicId, TopicDTO topicDTO, String token) {
+        if(studentRepository.findByToken(token) != null){
+            Topic topic = topicRepository.findById(topicId);
+            if(topic.getStudent() == studentRepository.findByToken(token)){
+                List<Topic> existedTopics = (List<Topic>) topicRepository.findAll();
+                for(Topic topic1 : existedTopics){
+                    if(topic1.getTopicname().equalsIgnoreCase(topicDTO.getTopicname())){
+                        throw new NullPointerException("Topic name existed, try another name");
+                    }
+                }
+
+                TopicDTO returnDto = new TopicDTO();
+                topic.setTopicname(topicDTO.getTopicname());
+                Teacher teacher = teacherRepository.findOne(topicDTO.getTeacherid());
+                topic.setTeacher(teacher);
+
+
+                topicRepository.save(topic);
+                returnDto.setAccepted(topic.isAccepted());
+                returnDto.setTeacherid(topic.getTeacher().getId());
+                returnDto.setTopicname(topic.getTopicname());
+                returnDto.setTeachername(topic.getTeacher().getRealname());
+                returnDto.setId(topic.getId());
+                returnDto.setStudentname(topic.getStudent().getUsername());
+                return returnDto;
+            }
+            else throw new NullPointerException("This topic is not yours topic");
+        }
+        else throw new NullPointerException("Invalid token");
+    }
+
+    public String deleteATopic(Long topicId, String token) {
+        if(studentRepository.findByToken(token) != null){
+            Topic topic = topicRepository.findById(topicId);
+            if(topic.getStudent() == studentRepository.findByToken(token)){
+               topicRepository.delete(topicId);
+                return "Student "+topic.getStudent().getUsername()+" has deleted " +topic.getTopicname()+" which tutored by " +topic.getTeacher().getRealname();
+            }
+            else throw new NullPointerException("This topic is not yours topic");
+        }
+        else throw new NullPointerException("Invalid token");
+    }
 }
