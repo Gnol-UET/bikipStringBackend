@@ -75,7 +75,7 @@ public class FacultyService {
 
 
     }
-    public List<FacultyDTO> showAllFaculty(){
+    public List<FacultyDTO>     showAllFaculty(){
         try{
             List<Faculty> facultyList = (List<Faculty>) facultyRepository.findAll();
             List<FacultyDTO> returnFacultyDTOs = new ArrayList<FacultyDTO>();

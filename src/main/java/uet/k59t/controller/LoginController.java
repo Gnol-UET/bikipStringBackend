@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import uet.k59t.controller.dto.PasswordDTO;
 import uet.k59t.controller.dto.StudentDTO;
 import uet.k59t.controller.dto.TeacherDTO;
 import uet.k59t.controller.dto.UserDTO;
@@ -43,5 +44,9 @@ public class LoginController {
         else throw new NullPointerException("Không có auth-token");
 
     }
-
+    @RequiredRoles({Role.STUDENT, Role.TEACHER})
+    @RequestMapping(value = "/changepassword", method = RequestMethod.PUT)
+    public String changepassword(@RequestBody PasswordDTO userDTO, HttpServletRequest httpServletRequest){
+        return loginService.changepassword(userDTO);
+    }
 }

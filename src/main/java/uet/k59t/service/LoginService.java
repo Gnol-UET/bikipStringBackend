@@ -6,6 +6,7 @@ package uet.k59t.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uet.k59t.controller.dto.PasswordDTO;
 import uet.k59t.controller.dto.StudentDTO;
 import uet.k59t.controller.dto.TeacherDTO;
 import uet.k59t.controller.dto.UserDTO;
@@ -79,7 +80,7 @@ public class LoginService {
     public UserDTO login(UserDTO userDTO) {
         if(studentRepository.findByEmail(userDTO.getUsername() + "@vnu.edu.vn") !=  null){
             Student a = studentRepository.findByEmail(userDTO.getUsername()+ "@vnu.edu.vn");
-            if(a.getPassword().equals(studentRepository.findByEmail(userDTO.getUsername()+ "@vnu.edu.vn").getPassword())){
+            if(a.getPassword().equals(userDTO.getPassword())){
                 if (a.getToken() == null) {
                     a.setToken(UUID.randomUUID().toString());
                     a.setTokenExpiry(new Date(System.currentTimeMillis() + (1000 * 60 * 60 * 24)));
@@ -97,7 +98,7 @@ public class LoginService {
         }
         else if(teacherRepository.findByUsername(userDTO.getUsername()) !=  null){
             Teacher b = teacherRepository.findByUsername(userDTO.getUsername());
-            if(b.getPassword().equals(teacherRepository.findByUsername(userDTO.getUsername()).getPassword())){
+            if(b.getPassword().equals(userDTO.getPassword())){
                 if (b.getToken() == null) {
                     b.setToken(UUID.randomUUID().toString());
                     b.setTokenExpiry(new Date(System.currentTimeMillis() + (1000 * 60 * 60 * 24)));
@@ -159,5 +160,27 @@ public class LoginService {
         }
 
 
+    }
+
+    public String changepassword(PasswordDTO passwordDTO) {
+        if(studentRepository.findByEmail(passwordDTO.getUsername()+"@vnu.edu.vn") != null){
+            Student a = studentRepository.findByEmail(passwordDTO.getUsername()+"@vnu.edu.vn");
+            if(a.getPassword().equals(passwordDTO.getOldpassword())){
+                a.setPassword(passwordDTO.getNewpassword());
+                studentRepository.save(a);
+                return "Password changed";
+            }
+            else throw new NullPointerException("Invalid old password");
+        }
+        else if(teacherRepository.findByUsername(passwordDTO.getUsername()) != null){
+            Teacher b = teacherRepository.findByUsername(passwordDTO.getUsername());
+            if(b.getPassword().equals(passwordDTO.getOldpassword())){
+                b.setPassword(passwordDTO.getNewpassword());
+                teacherRepository.save(b);
+                return "Password changed";
+            }
+            else throw new NullPointerException("Invalid old password");
+        }
+        else throw new NullPointerException("Invalid username");
     }
 }

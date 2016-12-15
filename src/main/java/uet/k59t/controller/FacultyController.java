@@ -2,6 +2,7 @@ package uet.k59t.controller;
 
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -69,14 +70,15 @@ public class FacultyController {
 
 
     @RequiredRoles(Role.MODERATOR)
-    @RequestMapping(value = "/faculty/createteacher", method = RequestMethod.POST)
+    @RequestMapping(value = "/faculty/createteacher",headers=("content-type=multipart/*"), method = RequestMethod.POST)
+
     public void createTeacher(@RequestParam("file") MultipartFile multipartFile, HttpServletRequest httpServletRequest) {
         String token = httpServletRequest.getHeader("auth-token");
         facultyService.createTeacher(multipartFile, token);
     }
 
     @RequiredRoles(Role.MODERATOR)
-    @RequestMapping(value = "/faculty/createstudent", method = RequestMethod.POST)
+    @RequestMapping(value = "/faculty/createstudent",  method = RequestMethod.POST)
     public void createStudent(@RequestParam("file") MultipartFile multipartFile, HttpServletRequest httpServletRequest) {
         String token = httpServletRequest.getHeader("auth-token");
         facultyService.createStudent(multipartFile, token);

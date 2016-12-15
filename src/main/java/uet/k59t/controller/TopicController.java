@@ -7,6 +7,7 @@ import uet.k59t.controller.dto.AcceptTopicDTO;
 import uet.k59t.controller.dto.TeacherDTO;
 import uet.k59t.controller.dto.TopicDTO;
 import uet.k59t.controller.stereotype.RequiredRoles;
+import uet.k59t.model.Moderator;
 import uet.k59t.model.Role;
 import uet.k59t.service.TopicService;
 
@@ -39,6 +40,10 @@ public class TopicController {
     public String closeRegister(HttpServletRequest httpServletRequest){
         String token = httpServletRequest.getHeader("auth-token");
         return topicService.closeRegister(token);
+    }
+    @RequestMapping(value = "topic/getregisterstatus", method = RequestMethod.GET)
+    public boolean getRegisterStatus(){
+        return Moderator.isOpenForRegister;
     }
     //Defend topics whichs are accepted
     @RequiredRoles(Role.MODERATOR)
